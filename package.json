@@ -65,6 +65,11 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.5",
+    "@mui/material": "^7.3.5",
+    "@mui/x-data-grid": "^8.18.0",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
@@ -72,10 +77,12 @@
     "axios": "^1.6.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
+    "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.0"
+    "rxjs": "^7.8.0",
+    "zustand": "^5.0.8"
   }
 }
