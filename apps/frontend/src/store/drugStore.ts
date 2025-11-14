@@ -2,7 +2,6 @@
 import { create } from 'zustand';
 import type {
   DrugRow,
-  TableColumn,
   TableConfig,
   Pagination,
   DrugsResponse,

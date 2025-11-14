@@ -16,7 +16,10 @@
     ],
     "rootDir": "src",
     "module": "esnext",
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "paths": {
+      "@drug-info/shared-types": ["../../libs/shared-types/src/index.ts"]
+    }
   },
   "exclude": [
     "out-tsc",
