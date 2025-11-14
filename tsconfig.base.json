@@ -17,6 +17,7 @@
     "strict": true,
     "target": "es2022",
     "customConditions": ["drug-info"],
+    "baseUrl": ".",
     "paths": {
       "@drug-info/shared-types": ["libs/shared-types/src/index.ts"]
     }

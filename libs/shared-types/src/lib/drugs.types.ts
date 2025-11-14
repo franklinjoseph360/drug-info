@@ -1,66 +1,50 @@
 /**
  * Shared types for drug-related API contracts between frontend and backend
  * 
+ * Types are inferred from Zod schemas, providing both compile-time and runtime safety.
  * Note: Some types are derived from Prisma schema. When Prisma types are available,
  * they can be used to ensure type safety between database and API.
  */
+import { z } from 'zod';
+import {
+  DrugRowSchema,
+  TableColumnSchema,
+  TableConfigSchema,
+  PaginationSchema,
+  GetDrugsParamsSchema,
+  DrugsResponseSchema,
+} from './drugs.schemas';
 
 /**
  * Represents a single drug row in the table
  * This matches the shape returned by the API after transformation from Prisma
  */
-export type DrugRow = {
-  id: number;
-  code: string;
-  name: string; // Computed from genericName + brandName
-  company: string | null;
-  launchDate: string | null; // ISO string (DateTime from Prisma)
-};
+export type DrugRow = z.infer<typeof DrugRowSchema>;
 
 /**
  * Table column configuration
  */
-export type TableColumn = {
-  key: string;
-  label: string;
-  visible?: boolean;
-  description?: string;
-};
+export type TableColumn = z.infer<typeof TableColumnSchema>;
 
 /**
  * Table configuration response
  */
-export type TableConfig = {
-  columns: TableColumn[];
-};
+export type TableConfig = z.infer<typeof TableConfigSchema>;
 
 /**
  * Pagination information
  */
-export type Pagination = {
-  page: number;
-  limit: number;
-  total: number;
-};
+export type Pagination = z.infer<typeof PaginationSchema>;
 
 /**
  * Query parameters for fetching drugs
  */
-export type GetDrugsParams = {
-  search?: string;
-  company?: string;
-  page?: number;
-  limit?: number;
-};
+export type GetDrugsParams = z.infer<typeof GetDrugsParamsSchema>;
 
 /**
  * Response from the drugs API endpoint
  */
-export type DrugsResponse = {
-  data: DrugRow[];
-  companies: string[];
-  pagination: Pagination;
-};
+export type DrugsResponse = z.infer<typeof DrugsResponseSchema>;
 
 /**
  * Prisma-derived types (for backend use)
