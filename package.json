@@ -13,6 +13,7 @@
   "scripts": {
     "start:backend": "nx serve backend",
     "start:frontend": "nx serve frontend",
+    "test:frontend": "nx test frontend --run",
     "prisma:seed": "ts-node --transpile-only prisma/seed.ts"
   },
   "devDependencies": {
