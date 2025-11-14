@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { GetDrugsQueryDto } from './dto/get-drugs-query.dto';
+import type { TableConfig, DrugsResponse, DrugRow } from '@drug-info/shared-types';
+import { drugSelect, type DrugQueryResult } from './drugs.types';
 
 @Injectable()
 export class DrugsService {
     constructor(private prisma: PrismaService) { }
 
-    getTableConfig() {
+    getTableConfig(): TableConfig {
         return {
             columns: [
                 { key: 'id', label: 'Id', visible: true },
@@ -52,17 +54,8 @@ export class DrugsService {
                 orderBy: { launchDate: 'desc' },
                 skip,
                 take: limit,
-                select: {
-                    id: true,
-                    code: true,
-                    genericName: true,
-                    brandName: true,
-                    launchDate: true,
-                    company: {
-                        select: { name: true },
-                    },
-                },
-            }),
+                select: drugSelect,
+            }) as Promise<DrugQueryResult[]>,
 
             this.prisma.company.findMany({
                 select: { name: true },
@@ -72,15 +65,16 @@ export class DrugsService {
 
         const companyList = companies.map(c => c.name);
 
-        const mapped = data.map(d => ({
+        // Type-safe mapping from Prisma result to API response
+        const mapped: DrugRow[] = data.map((d: DrugQueryResult) => ({
             id: d.id,
             code: d.code,
             name: `${d.genericName}${d.brandName ? ` (${d.brandName})` : ''}`,
             company: d.company?.name ?? null,
-            launchDate: d.launchDate,
+            launchDate: d.launchDate ? d.launchDate.toISOString() : null,
         }));
 
-        return {
+        const response: DrugsResponse = {
             data: mapped,
             companies: companyList,
             pagination: {
@@ -89,5 +83,7 @@ export class DrugsService {
                 total,
             },
         };
+
+        return response;
     }
 }
