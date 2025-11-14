@@ -44,24 +44,27 @@ export function DrugsPage() {
                 return {
                     field: col.key,
                     headerName: col.label,
-                    width: 200,
+                    width: 500,
                     renderHeader: (_params: GridColumnHeaderParams<DrugRow>) => (
-                        <FormControl fullWidth size="small">
-                            <Select
-                                value={companyFilter}
-                                onChange={(e) => setCompanyFilter(e.target.value)}
-                                displayEmpty
-                                renderValue={(val) => val || 'All'}
-                                inputProps={{ 'aria-label': 'Company filter' }}
-                            >
-                                <MenuItem value="">All</MenuItem>
-                                {companyOptions.map((company) => (
-                                    <MenuItem key={company} value={company}>
-                                        {company}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                        <Box display="flex" flexDirection="row" gap={0.5} alignItems="center">
+                            <span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Companies&nbsp;</span>
+                            <FormControl fullWidth size="small">
+                                <Select
+                                    value={companyFilter}
+                                    onChange={(e) => setCompanyFilter(e.target.value)}
+                                    displayEmpty
+                                    renderValue={(val) => val || 'All'}
+                                    inputProps={{ 'aria-label': 'Company filter' }}
+                                >
+                                    <MenuItem value="">All</MenuItem>
+                                    {companyOptions.map((company) => (
+                                        <MenuItem key={company} value={company}>
+                                            {company}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Box>
                     ),
                 } as GridColDef<DrugRow>;
             }
@@ -126,12 +129,9 @@ export function DrugsPage() {
         <div style={{ height: 600, width: '100%', padding: '1rem' }}>
             <Box display="flex" alignItems="center" gap={2} marginBottom={2}>
                 <h1>Drugs</h1>
-                <Button variant="outlined" onClick={handleReset}>
-                    Reset
-                </Button>
             </Box>
 
-            <Box marginBottom={2} maxWidth={300}>
+            <Box marginBottom={2} display="flex" flexDirection="row" gap={2} alignItems="center" maxWidth={300}>
                 <input
                     placeholder="Search by name or code"
                     value={searchTerm}
@@ -144,6 +144,9 @@ export function DrugsPage() {
                     }}
                     aria-label="Search input"
                 />
+                <Button variant="outlined" onClick={handleReset}>
+                    Reset
+                </Button>
             </Box>
 
             <DataGrid<DrugRow>

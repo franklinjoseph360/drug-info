@@ -179,6 +179,7 @@ nx build backend
 nx build frontend
 
 # Test
+npm run test:frontend
 nx test frontend
 nx test backend
 
@@ -195,6 +196,8 @@ nx typecheck backend
 
 **Frontend tests:**
 ```bash
+npm run test:frontend
+# or
 nx test frontend
 ```
 
