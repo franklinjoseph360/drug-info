@@ -16,6 +16,9 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
-    "customConditions": ["drug-info"]
+    "customConditions": ["drug-info"],
+    "paths": {
+      "@drug-info/shared-types": ["libs/shared-types/src/index.ts"]
+    }
   }
 }
