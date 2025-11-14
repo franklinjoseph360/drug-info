@@ -131,7 +131,7 @@ const validated = DrugsResponseSchema.parse(apiResponse);
 
 3. **Set up environment variables**
    
-   Create `.env` file or re-use .env.example file in the root directory:
+   Create `.env` file or re-use `.env.example` file in the root directory:
    ```env
    DATABASE_URL="postgresql://user:password@localhost:5432/drug_info"
    ```
