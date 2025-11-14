@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  drugs Drug[]
+}
+
+model Drug {
+  id           Int              @id @default(autoincrement())
+  code         String           @unique
+  genericName  String
+  brandName    String
+  launchDate   DateTime?
+  companyId    Int?
+  company      Company?         @relation(fields: [companyId], references: [id])
+  ingredients  DrugIngredient[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model Ingredient {
+  id           Int              @id @default(autoincrement())
+  name         String           @unique
+  drugs        DrugIngredient[]
+}
+
+model DrugIngredient {
+  drugId       Int
+  ingredientId Int
+  drug         Drug       @relation(fields: [drugId], references: [id])
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+
+  @@id([drugId, ingredientId])
+}
