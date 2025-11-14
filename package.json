@@ -12,10 +12,8 @@
   },
   "scripts": {
     "start:backend": "nx serve backend",
-    "start:frontend": "nx serve frontend"
-  },
-  "prisma": {
-    "seed": "ts-node --transpile-only prisma/seed.ts"
+    "start:frontend": "nx serve frontend",
+    "prisma:seed": "ts-node --transpile-only prisma/seed.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
