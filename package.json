@@ -10,6 +10,10 @@
     "node": "20.19.4",
     "npm": ">=10"
   },
+  "scripts": {
+    "start:backend": "nx serve backend",
+    "start:frontend": "nx serve frontend"
+  },
   "prisma": {
     "seed": "ts-node --transpile-only prisma/seed.ts"
   },
