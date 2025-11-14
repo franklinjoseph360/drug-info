@@ -14,6 +14,7 @@ export default defineConfig({
       '@app': path.resolve(__dirname, 'src/app'),
       '@pages': path.resolve(__dirname, 'src/pages'),
       '@store': path.resolve(__dirname, 'src/store'),
+      '@drug-info/shared-types': path.resolve(__dirname, '../../libs/shared-types/src/index.ts'),
     },
   },
   server: {

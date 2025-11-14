@@ -1,49 +1,22 @@
 // src/store/drugStore.ts
 import { create } from 'zustand';
+import type {
+  DrugRow,
+  TableColumn,
+  TableConfig,
+  Pagination,
+  DrugsResponse,
+  GetDrugsParams,
+} from '@drug-info/shared-types';
 
-// Types
-export type DrugRow = {
-  id: number;
-  code: string;
-  name: string;
-  company: string | null;
-  launchDate: string | null; // ISO string
+// Extend DrugRow for frontend-specific needs (e.g., index signature for dynamic properties)
+export type DrugRowExtended = DrugRow & {
   [key: string]: any;
-};
-
-export type TableColumn = {
-  key: string;
-  label: string;
-  visible?: boolean;
-  description?: string;
-};
-
-export type TableConfig = {
-  columns: TableColumn[];
-};
-
-export type Pagination = {
-  page: number;
-  limit: number;
-  total: number;
-};
-
-export type DrugsResponse = {
-  data: DrugRow[];
-  companies: string[];
-  pagination: Pagination;
-};
-
-export type GetDrugsParams = {
-  search?: string;
-  company?: string;
-  page?: number;
-  limit?: number;
 };
 
 interface State {
   tableConfig: TableConfig | null;
-  drugs: DrugRow[];
+  drugs: DrugRowExtended[];
   companies: string[];
   pagination: Pagination;
   loading: boolean;

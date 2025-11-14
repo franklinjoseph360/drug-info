@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useDrugStore, DrugRow, TableColumn } from '../store/drugStore';
+import { useDrugStore } from '../store/drugStore';
+import type { DrugRow, TableColumn } from '@drug-info/shared-types';
 import { DataGrid, GridColDef, GridColumnHeaderParams } from '@mui/x-data-grid';
 import { MenuItem, Select, FormControl, Button, Box } from '@mui/material';
 import { format } from 'date-fns';
