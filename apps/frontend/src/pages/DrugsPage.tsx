@@ -13,6 +13,7 @@ export function DrugsPage() {
     const clearFiltersStore = useDrugStore((s) => s.clearFilters);
 
     const [companyFilter, setCompanyFilter] = useState<string>('');
+    const [searchTerm, setSearchTerm] = useState<string>('');
 
     // Fetch table config and drugs on mount
     useEffect(() => {
@@ -22,39 +23,44 @@ export function DrugsPage() {
 
     // Unique companies for filter dropdown
     const companyOptions = useMemo(() => {
-        return Array.from(new Set(drugs.map((d) => d.company).filter(Boolean))) as string[];
+    if (!Array.isArray(drugs)) return [];
+
+    return Array.from(
+        new Set(
+        (drugs ?? []).map((d) => d.company).filter(Boolean)
+        )
+    ) as string[];
     }, [drugs]);
 
+
     // Columns
-    const columns: GridColDef<DrugRow>[] = useMemo(() => {
-        if (!tableConfig) return [];
+    const columns: GridColDef<DrugRow>[] = useMemo(() => {  
+        if (!tableConfig?.columns || !Array.isArray(tableConfig.columns)) return [];
 
         return tableConfig.columns.map((col: TableColumn) => {
-            // Company column with dropdown in header
             if (col.key === 'company') {
+                // Company column with dropdown in header
                 return {
                     field: col.key,
                     headerName: col.label,
                     width: 200,
                     renderHeader: (_params: GridColumnHeaderParams<DrugRow>) => (
-                        <>
-                            <span>{col.label} &nbsp;</span>
-                            <FormControl fullWidth size="small">
-                                <Select
-                                    value={companyFilter}
-                                    onChange={(e) => setCompanyFilter(e.target.value)}
-                                    displayEmpty
-                                    renderValue={(val) => val || 'All'}
-                                >
-                                    <MenuItem value="">All</MenuItem>
-                                    {companyOptions.map((company) => (
-                                        <MenuItem key={company} value={company}>
-                                            {company}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </>
+                        <FormControl fullWidth size="small">
+                            <Select
+                                value={companyFilter}
+                                onChange={(e) => setCompanyFilter(e.target.value)}
+                                displayEmpty
+                                renderValue={(val) => val || 'All'}
+                                inputProps={{ 'aria-label': 'Company filter' }}
+                            >
+                                <MenuItem value="">All</MenuItem>
+                                {companyOptions.map((company) => (
+                                    <MenuItem key={company} value={company}>
+                                        {company}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     ),
                 } as GridColDef<DrugRow>;
             }
@@ -69,7 +75,6 @@ export function DrugsPage() {
                         const dateStr = params.row.launchDate;
                         return dateStr ? format(new Date(dateStr), 'dd MMM yyyy') : '';
                     }
-                    // For all other columns, just display the value
                     const value = params.row[col.key as keyof DrugRow];
                     return value ?? '';
                 },
@@ -79,20 +84,37 @@ export function DrugsPage() {
 
     // Filtered & sorted rows
     const filteredRows = useMemo(() => {
-        let rows = drugs;
+        if (!Array.isArray(drugs)) return [];
+
+        let rows = drugs ?? [];
+
+        // Company filter
         if (companyFilter) {
             rows = rows.filter((d) => d.company === companyFilter);
         }
+
+        // Search filter
+        if (searchTerm) {
+            const s = searchTerm.toLowerCase();
+            rows = rows.filter(
+                (d) =>
+                    d.name.toLowerCase().includes(s) ||
+                    d.code.toLowerCase().includes(s)
+            );
+        }
+
+        // Sort by descending launch date
         return [...rows].sort((a, b) => {
             const aTime = a.launchDate ? new Date(a.launchDate).getTime() : 0;
             const bTime = b.launchDate ? new Date(b.launchDate).getTime() : 0;
             return bTime - aTime;
         });
-    }, [drugs, companyFilter]);
+    }, [drugs, companyFilter, searchTerm]);
 
     // Reset filters
     const handleReset = () => {
         setCompanyFilter('');
+        setSearchTerm('');
         clearFiltersStore();
         fetchDrugs();
     };
@@ -108,11 +130,26 @@ export function DrugsPage() {
                 </Button>
             </Box>
 
+            <Box marginBottom={2} maxWidth={300}>
+                <input
+                    placeholder="Search by name or code"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    style={{
+                        width: '100%',
+                        padding: '8px',
+                        borderRadius: '4px',
+                        border: '1px solid #ccc',
+                    }}
+                    aria-label="Search input"
+                />
+            </Box>
+
             <DataGrid<DrugRow>
                 rows={filteredRows}
                 columns={columns}
                 getRowId={(row) => row.id}
-                showToolbar={true}
+                showToolbar
                 initialState={{
                     pagination: { paginationModel: { page: 0, pageSize: 10 } },
                 }}

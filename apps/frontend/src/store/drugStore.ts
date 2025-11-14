@@ -68,7 +68,7 @@ const defaultPagination: Pagination = { page: 1, limit: 20, total: 0 };
 
 // Store
 export const useDrugStore = create<State>((set, get) => ({
-  tableConfig: null,
+  tableConfig: { columns: [] },
   drugs: [],
   companies: [],
   pagination: defaultPagination,
