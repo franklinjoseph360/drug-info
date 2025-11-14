@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { GetDrugsQueryDto } from './dto/get-drugs-query.dto';
-import type { TableConfig, DrugsResponse, DrugRow } from '@drug-info/shared-types';
+import type { TableConfig, DrugRow } from '@drug-info/shared-types';
+import { TableConfigSchema, DrugsResponseSchema } from '@drug-info/shared-types';
 import { drugSelect, type DrugQueryResult } from './drugs.types';
 
 @Injectable()
@@ -9,7 +10,7 @@ export class DrugsService {
     constructor(private prisma: PrismaService) { }
 
     getTableConfig(): TableConfig {
-        return {
+        const config = {
             columns: [
                 { key: 'id', label: 'Id', visible: true },
                 { key: 'code', label: 'Code', visible: true },
@@ -18,6 +19,9 @@ export class DrugsService {
                 { key: 'launchDate', label: 'Launch Date', visible: true },
             ],
         };
+        
+        // Validate before returning
+        return TableConfigSchema.parse(config);
     }
 
     async findAll(query: GetDrugsQueryDto) {
@@ -74,7 +78,7 @@ export class DrugsService {
             launchDate: d.launchDate ? d.launchDate.toISOString() : null,
         }));
 
-        const response: DrugsResponse = {
+        const response = {
             data: mapped,
             companies: companyList,
             pagination: {
@@ -84,6 +88,7 @@ export class DrugsService {
             },
         };
 
-        return response;
+        // Validate before returning
+        return DrugsResponseSchema.parse(response);
     }
 }

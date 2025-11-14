@@ -7,6 +7,10 @@ import type {
   DrugsResponse,
   GetDrugsParams,
 } from '@drug-info/shared-types';
+import {
+  TableConfigSchema,
+  DrugsResponseSchema,
+} from '@drug-info/shared-types';
 
 // Extend DrugRow for frontend-specific needs (e.g., index signature for dynamic properties)
 export type DrugRowExtended = DrugRow & {
@@ -89,7 +93,10 @@ export const useDrugStore = create<State>((set, get) => ({
       const res = await fetch('/api/drugs/table-config');
       if (!res.ok)
         throw new Error(`Failed to load table config: ${res.statusText}`);
-      const cfg: TableConfig = await res.json();
+      const json = await res.json();
+      
+      // Validate response with Zod
+      const cfg = TableConfigSchema.parse(json);
       set({ tableConfig: cfg, loading: false });
     } catch (err: any) {
       set({ loading: false, error: err?.message ?? 'Unknown error' });
@@ -119,12 +126,15 @@ export const useDrugStore = create<State>((set, get) => ({
         throw new Error(`Failed to load drugs: ${res.status} ${text}`);
       }
 
-      const json: DrugsResponse = await res.json();
+      const json = await res.json();
+
+      // Validate response with Zod
+      const validated = DrugsResponseSchema.parse(json);
 
       set({
-        drugs: json.data,
-        companies: json.companies,
-        pagination: json.pagination,
+        drugs: validated.data,
+        companies: validated.companies,
+        pagination: validated.pagination,
         loading: false,
         error: null,
         search,
